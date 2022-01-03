@@ -1,0 +1,43 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity maquinadeChicles is
+    Port ( x,clk : in  STD_LOGIC;
+           z : out  STD_LOGIC);
+end maquinadeChicles;
+
+architecture Behavioral of maquinadeChicles is
+type estados is (f0,f1,f2);
+signal estado_pres, estado_fut: estados;
+begin
+process (estado_pres, x)
+begin 
+case estado_pres is 
+	when f0 => z <= '0';
+	if x ='1' then 
+		estado_fut <= f1;
+	else 
+		estado_fut <= f0;
+	end if;
+	when f1 => z <= '0';
+	if x ='1' then 
+		estado_fut <= f2;
+	else 
+		estado_fut <= f1;
+	end if;
+	when f2 => z <= '0';
+	if x ='1' then 
+		estado_fut <= f0;
+		z<='1';
+	else 
+		estado_fut <= f2;
+	z<= '0';
+	end if;
+end case;
+end process;
+p_reloj: process(clk) begin 
+if (clk'event and clk='1') then 
+estado_pres<= estado_fut;
+end if; 
+end process p_reloj; 
+end Behavioral;
